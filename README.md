@@ -1,1 +1,1 @@
-﻿#Class Collection
+#Class Collection
