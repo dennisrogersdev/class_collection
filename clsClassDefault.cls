@@ -16,14 +16,6 @@ Private sFieldId As String
 Private Conn As ADODB.Connection
 Private cCollection As Collection
 
-Public Property Get values() As Collection
-    Set values = cCollection
-End Property
-
-Public Property Let values(ByVal vNewValue As Collection)
-    Set cCollection = vNewValue
-End Property
-
 Public Property Get Table() As String
     Table = sTable
 End Property
@@ -44,6 +36,14 @@ Public Property Set Connection(ByVal vNewValue As ADODB.Connection)
     Set Conn = vNewValue
 End Property
 
+Public Property Get values() As Collection
+    Set values = cCollection
+End Property
+
+Public Property Let values(ByVal vNewValue As Collection)
+    Set cCollection = vNewValue
+End Property
+
 Public Function Mapping()
     Dim sSQL As String
     Dim rs As ADODB.Recordset
@@ -52,7 +52,7 @@ Public Function Mapping()
     
     Set cCollection = New Collection
     
-    Set rs = Conn.Execute("SELECT * FROM " & sTable)
+    Set rs = Conn.Execute("SELECT * FROM " & sTable & " LIMIT 0")
     
     For Each rsField In rs.Fields
         Select Case rsField.Type
