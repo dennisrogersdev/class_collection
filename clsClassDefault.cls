@@ -48,8 +48,7 @@ Public Function Mapping()
     Dim sSQL As String
     Dim rs As ADODB.Recordset
     Dim rsField As ADODB.Field
-    
-    
+
     Set cCollection = New Collection
     
     Set rs = Conn.Execute("SELECT * FROM " & sTable & " LIMIT 0")

@@ -83,7 +83,7 @@ Private Sub cmdOk_Click()
     people.setValue "codigo", 3
     
     If Not people.getById.EOF Then
-        MsgBox people.getValue("nome") & ";" & people.getValue("telefone") & ";" & people.getValue("endereco")
+        MsgBox people("nome") & ";" & people("telefone") & ";" & people("endereco")
     End If
 End Sub
 
