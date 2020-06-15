@@ -1,3 +1,5 @@
 frmTest = 104, 104, 862, 546, , 26, 26, 784, 468, C
 modMain = 52, 52, 810, 494, 
-cContact = 78, 78, 836, 520, Z
+cContact = 78, 78, 836, 520, 
+clsClassDefault = 104, 104, 823, 546, Z
+cPeople = 130, 130, 849, 572, 

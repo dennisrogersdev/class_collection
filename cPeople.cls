@@ -11,25 +11,30 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private values As Collection
+Private cls As clsClassDefault
 
-Public Function getValue( _
-    ByVal attrib As String) As Variant
-    getValue = values(attrib)
-End Function
-
-Public Function setValue( _
+Public Sub setValue( _
     ByVal attrib As String, _
     ByVal value As Variant)
-    values.Remove attrib
-    values.Add value, attrib
-End Function
+    cls.values.Remove attrib
+    cls.values.Add value, attrib
+End Sub
+
+Public Property Get getValue( _
+    ByVal attrib As String) As Variant
+Attribute getValue.VB_UserMemId = 0
+    getValue = cls.values(attrib)
+End Property
 
 Private Sub Class_Initialize()
-    Dim cls As New clsClassDefault
+    Set cls = New clsClassDefault
     Set cls.Connection = Conn
     cls.Table = "cad_clientes"
-    Set values = cls.Mapping
-    
-    Debug.Print values("nome")
+    cls.FieldId = "codigo"
+    cls.Mapping
 End Sub
+
+Public Function getById() As ADODB.Recordset
+    Set getById = cls.getById
+End Function
+

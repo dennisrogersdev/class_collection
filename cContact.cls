@@ -21,6 +21,7 @@ End Sub
 
 Public Function getValue( _
     ByVal attrib As String) As Variant
+Attribute getValue.VB_UserMemId = 0
     getValue = contact(attrib)
 End Function
 

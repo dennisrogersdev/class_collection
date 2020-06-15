@@ -12,7 +12,17 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Private sTable As String
+Private sFieldId As String
 Private Conn As ADODB.Connection
+Private cCollection As Collection
+
+Public Property Get values() As Collection
+    Set values = cCollection
+End Property
+
+Public Property Let values(ByVal vNewValue As Collection)
+    Set cCollection = vNewValue
+End Property
 
 Public Property Get Table() As String
     Table = sTable
@@ -22,15 +32,23 @@ Public Property Let Table(ByVal vNewValue As String)
     sTable = vNewValue
 End Property
 
+Public Property Get FieldId() As String
+    FieldId = sFieldId
+End Property
+
+Public Property Let FieldId(ByVal vNewValue As String)
+    sFieldId = vNewValue
+End Property
+
 Public Property Set Connection(ByVal vNewValue As ADODB.Connection)
     Set Conn = vNewValue
 End Property
 
-Public Function Mapping() As Collection
+Public Function Mapping()
     Dim sSQL As String
     Dim rs As ADODB.Recordset
     Dim rsField As ADODB.Field
-    Dim cCollection As Collection
+    
     
     Set cCollection = New Collection
     
@@ -49,4 +67,23 @@ Public Function Mapping() As Collection
     Next
     
     Set Mapping = cCollection
+End Function
+
+Public Function getById() As ADODB.Recordset
+    
+    Dim rs As New ADODB.Recordset
+    Dim Field As ADODB.Field
+    
+    Set rs = Conn.Execute("SELECT * FROM " & Table & " WHERE " & sFieldId & "=" & cCollection(sFieldId))
+    
+    If rs.EOF Then
+        Call Mapping
+    Else
+        For Each Field In rs.Fields
+            cCollection.Remove Field.Name
+            cCollection.Add Field.value, Field.Name
+        Next
+    End If
+    
+    Set getById = rs
 End Function

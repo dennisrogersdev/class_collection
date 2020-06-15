@@ -77,8 +77,14 @@ Private Sub cmdOk_Click()
     
     people.setValue "nome", txtName.Text
     people.setValue "telefone", txtPhone.Text
+        
+    MsgBox people("nome")
     
-    MsgBox people.getValue("nome") & " " & people.getValue("codigo")
+    people.setValue "codigo", 3
+    
+    If Not people.getById.EOF Then
+        MsgBox people.getValue("nome") & ";" & people.getValue("telefone") & ";" & people.getValue("endereco")
+    End If
 End Sub
 
 Private Sub Form_Load()
