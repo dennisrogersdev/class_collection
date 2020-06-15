@@ -45,5 +45,8 @@ Public Function Mapping() As Collection
                 cCollection.Add 0, rsField.Name
             Case Else
                 cCollection.Add "", rsField.Name
+        End Select
     Next
+    
+    Set Mapping = cCollection
 End Function

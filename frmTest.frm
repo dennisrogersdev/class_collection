@@ -71,4 +71,16 @@ Private Sub cmdOk_Click()
     contact.setValue "phone", txtPhone.Text
     
     lblView.Caption = "Contact Name:" & contact.getValue("name") & " Phone:" & contact.getValue("phone")
+    
+    
+    Dim people As New cPeople
+    
+    people.setValue "nome", txtName.Text
+    people.setValue "telefone", txtPhone.Text
+    
+    MsgBox people.getValue("nome") & " " & people.getValue("codigo")
+End Sub
+
+Private Sub Form_Load()
+    Conn.Open "dsn=he_varejo"
 End Sub
