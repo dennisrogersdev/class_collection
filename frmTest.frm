@@ -72,7 +72,6 @@ Private Sub cmdOk_Click()
     
     lblView.Caption = "Contact Name:" & contact.getValue("name") & " Phone:" & contact.getValue("phone")
     
-    
     Dim people As New cPeople
     
     people.setValue "nome", txtName.Text
@@ -85,6 +84,24 @@ Private Sub cmdOk_Click()
     If Not people.getById.EOF Then
         MsgBox people("nome") & ";" & people("telefone") & ";" & people("endereco")
     End If
+    
+    Debug.Print people.getById.getString(, , "|", Chr(13))
+    Debug.Print people.getString("|")
+    
+    
+    Dim produto As New clsClassDefault
+    produto.buildClass "cad_produtos", "codigo", Conn
+    produto.setValue "codigo", 4
+    produto.getById
+    
+    Debug.Print produto.getString
+    
+    Dim rs As ADODB.Recordset
+    
+    Set rs = produto.getListAll(10)
+    
+    
+    produto.getListFilter "descricao LIKE '%a%'"
 End Sub
 
 Private Sub Form_Load()

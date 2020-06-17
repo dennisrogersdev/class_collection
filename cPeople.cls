@@ -16,14 +16,13 @@ Private cls As clsClassDefault
 Public Sub setValue( _
     ByVal attrib As String, _
     ByVal value As Variant)
-    cls.values.Remove attrib
-    cls.values.Add value, attrib
+    cls.setValue attrib, value
 End Sub
 
 Public Property Get getValue( _
     ByVal attrib As String) As Variant
 Attribute getValue.VB_UserMemId = 0
-    getValue = cls.values(attrib)
+    getValue = cls.getValue(attrib)
 End Property
 
 Private Sub Class_Initialize()
@@ -33,6 +32,11 @@ Private Sub Class_Initialize()
     cls.FieldId = "codigo"
     cls.Mapping
 End Sub
+
+Public Function getString( _
+    Optional ByVal sDelimiter As String = vbTab) As String
+    getString = cls.getString(sDelimiter)
+End Function
 
 Public Function getById() As ADODB.Recordset
     Set getById = cls.getById

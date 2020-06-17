@@ -13,6 +13,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Private sTable As String
 Private sFieldId As String
+
 Private Conn As ADODB.Connection
 Private cCollection As Collection
 
@@ -44,6 +45,18 @@ Public Property Let values(ByVal vNewValue As Collection)
     Set cCollection = vNewValue
 End Property
 
+Public Sub setValue( _
+    ByVal attrib As String, _
+    ByVal Value As Variant)
+    values.Remove attrib
+    values.Add Value, attrib
+End Sub
+
+Public Property Get getValue( _
+    ByVal attrib As String) As Variant
+    getValue = values(attrib)
+End Property
+
 Public Function Mapping()
     Dim sSQL As String
     Dim rs As ADODB.Recordset
@@ -68,6 +81,31 @@ Public Function Mapping()
     Set Mapping = cCollection
 End Function
 
+Public Sub buildClass( _
+    ByVal strTable As String, _
+    ByVal strFieldId As String, _
+    ByVal connDB As ADODB.Connection)
+    
+    sTable = strTable
+    sFieldId = strFieldId
+    Set Conn = connDB
+    
+    Call Mapping
+End Sub
+
+Public Function getString( _
+    Optional ByVal sDelimiter As String = vbTab) As String
+    
+    Dim sStr As String
+    Dim Col As Variant
+    
+    For Each Col In cCollection
+        sStr = sStr & sDelimiter & Col
+    Next
+    
+    getString = Mid(sStr, 2)
+End Function
+
 Public Function getById() As ADODB.Recordset
     
     Dim rs As New ADODB.Recordset
@@ -79,10 +117,55 @@ Public Function getById() As ADODB.Recordset
         Call Mapping
     Else
         For Each Field In rs.Fields
-            cCollection.Remove Field.Name
-            cCollection.Add Field.value, Field.Name
+            setValue Field.Name, Field.Value
         Next
     End If
     
     Set getById = rs
 End Function
+
+Public Function getListAll( _
+    Optional ByVal Limit As Long = 0) As ADODB.Recordset
+    
+    Set getListAll = Conn.Execute("SELECT * FROM " & Table & IIf(Limit > 0, " LIMIT " & Limit, ""))
+End Function
+
+Public Function getListFilter( _
+    ParamArray Args() As Variant)
+    
+    Dim arg As Variant
+    Dim sFilter As String
+    
+    For Each arg In Args
+        sFilter = sFilter & " AND " & arg
+    Next
+    
+    sFilter = Mid(sFilter, 5)
+    
+    Set getListFilter = Conn.Execute("SELECT * FROM " & Table & " WHERE " & sFilter)
+End Function
+
+Public Function Insert()
+    Dim query As String
+    Dim rs As ADODB.Recordset
+    Dim Field As ADODB.Field
+    
+    Set rs = Conn.Execute("SELECT * FROM " & Table & " LIMIT 0")
+    
+    query = query & "INSERT INTO "
+    query = query & "   " & sTable & " ("
+    For Each Field In rs.Fields
+        query = query & "   " & Field.Name & ","
+    Next
+    query = Left(query, Len(query) - 1)
+    query = query & " ) VALUES ( "
+    
+    For Each Field In rs.Fields
+        'Verificar Field.Type para tratar gravação no banco de dados
+        query = query & "   " & values(Field.Name) & ","
+    Next
+    query = Left(query, Len(query) - 1)
+    query = query & " )"
+    
+End Function
+
