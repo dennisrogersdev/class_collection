@@ -47,9 +47,9 @@ End Property
 
 Public Sub setValue( _
     ByVal attrib As String, _
-    ByVal Value As Variant)
+    ByVal value As Variant)
     values.Remove attrib
-    values.Add Value, attrib
+    values.Add value, attrib
 End Sub
 
 Public Property Get getValue( _
@@ -117,7 +117,7 @@ Public Function getById() As ADODB.Recordset
         Call Mapping
     Else
         For Each Field In rs.Fields
-            setValue Field.Name, Field.Value
+            setValue Field.Name, Field.value
         Next
     End If
     
@@ -152,11 +152,14 @@ Public Function Insert()
     
     Set rs = Conn.Execute("SELECT * FROM " & Table & " LIMIT 0")
     
+    query = ""
     query = query & "INSERT INTO "
     query = query & "   " & sTable & " ("
+    
     For Each Field In rs.Fields
         query = query & "   " & Field.Name & ","
     Next
+    
     query = Left(query, Len(query) - 1)
     query = query & " ) VALUES ( "
     
@@ -164,6 +167,7 @@ Public Function Insert()
         'Verificar Field.Type para tratar gravação no banco de dados
         query = query & "   " & values(Field.Name) & ","
     Next
+    
     query = Left(query, Len(query) - 1)
     query = query & " )"
     
